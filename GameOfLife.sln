@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLife", "WpfApp1\GameOfLife.csproj", "{86D2787A-9E80-4425-AA18-ADD2D2E9CBF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLife", "GameOfLifeUI\GameOfLife.csproj", "{86D2787A-9E80-4425-AA18-ADD2D2E9CBF9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBuilder", "GameBuilder\GameBuilder.csproj", "{A104CAC8-BFE1-42F2-BDE5-CF1197810FBF}"
 EndProject

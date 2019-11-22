@@ -7,80 +7,86 @@ namespace Game
     public class GameOfLife : IGame
     {
         uint universeSize;
-        Cell[,] cells;
+        Cell[,] board;
         public GameOfLife(uint UniverseSize = 25)
         {
             universeSize = UniverseSize;
-            cells = new Cell[UniverseSize, UniverseSize];
+            board = new Cell[UniverseSize, UniverseSize];
             SetDefaultValues();
         }
 
         public Cell[,] GetCells()
         {
-            return cells;
+            return board;
         }
 
         public Cell[,] Build()
         {
-            //TODO: Refactor it to draw the canvas initially for verious methods
             Random generator = new Random();
 
             for (var i = 0; i < universeSize; i++)
             {
                 for (var j = 0; j < universeSize; j++)
                 {
-                    cells[i, j] = new Cell(i, j, ((generator.Next(2) == 0) ? false : true));
+                    board[i, j] = new Cell(((generator.Next(2) == 0) ? false : true));
                 }
             }
-            return cells;
+            return board;
         }
 
         public Cell[,] Play()
         {
             int numNeighbors;
-            var changedCells = new List<Cell>();
 
             for (var i = 0; i < universeSize; i++)
             {
                 for (var j = 0; j < universeSize; j++)
                 {
-                    numNeighbors = GetNeighbors(i, j);
+                    if (i > 0 && j > 0)
+                    {
+                        var c = i;
+                    }
+                    numNeighbors = GetNumOfLiveNeighbors(i, j);
 
-                    if (cells[i, j].IsAlive && numNeighbors < 2 || numNeighbors > 3)
-                        changedCells.Add(new Cell(i, j, false));
-                    else if (!cells[i, j].IsAlive && numNeighbors == 3)
-                        changedCells.Add(new Cell(i, j, true));
+                    if (board[i, j].value == 1 && (numNeighbors < 2 || numNeighbors > 3))
+                        board[i, j].value = -1;
+                    else if (board[i, j].value == 0 && numNeighbors == 3)
+                        board[i, j].value = 2;
                 }
             }
 
-            Parallel.ForEach(changedCells, (cell) =>
+            for (var i = 0; i < universeSize; i++)
             {
-                cells[cell.Row, cell.Column].IsAlive = cell.IsAlive;
-            });
+                for (var j = 0; j < universeSize; j++)
+                {
+                    if (board[i, j].value == 2)
+                        board[i, j].value = 1;
 
-            return cells;
+                    if (board[i, j].value == -1)
+                        board[i, j].value = 0;
+                }
+            }
+            return board;
         }
 
-        private int GetNeighbors(int x, int y)
+        private int GetNumOfLiveNeighbors(int row, int col)
         {
-            var total = 0;
-            if (y > 0)
-                total += cells[x, y - 1].IsAlive ? 1 : 0;
-            if (y < universeSize - 1)
-                total += cells[x, y + 1].IsAlive ? 1 : 0;
-            if (x > 0)
-                total += cells[x - 1, y].IsAlive ? 1 : 0;
-            if (x < universeSize - 1)
-                total += cells[x + 1, y].IsAlive ? 1 : 0;
-            if (y > 0 && x > 0)
-                total += cells[x - 1, y - 1].IsAlive ? 1 : 0;
-            if (y > 0 && x < universeSize - 1)
-                total += cells[x + 1, y - 1].IsAlive ? 1 : 0;
-            if (y < universeSize - 1 && x > 0)
-                total += cells[x - 1, y + 1].IsAlive ? 1 : 0;
-            if (y < universeSize - 1 && x < universeSize - 1)
-                total += cells[x + 1, y + 1].IsAlive ? 1 : 0;
-            return total;
+            int count = 0;
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    if (!(i == 0 && j == 0))
+                    {
+                        int r = row + i, c = col + j;
+                        if (r >= 0 && r < universeSize
+                                        && c >= 0 && c < universeSize
+                                        && Math.Abs(board[r, c].value) == 1)
+                            count++;
+                    }
+                }
+            }
+            return count;
         }
 
         private void SetDefaultValues()
@@ -89,7 +95,7 @@ namespace Game
             {
                 for (var j = 0; j < universeSize; j++)
                 {
-                    cells[i, j] = new Cell(i, j, false );
+                    board[i, j] = new Cell(false);
                 }
             }
         }

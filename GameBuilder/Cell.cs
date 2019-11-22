@@ -8,30 +8,19 @@
         /// <param name="row">Row index </param>
         /// <param name="column">Column index</param>
         /// <param name="alive">Is alive or not</param>
-        public Cell(int row, int column, bool alive)
+        public Cell(bool alive)
         {
-            Row = row;
-            Column = column;
-            this.alive = alive;
+            value = alive ? 1 : 0;
         }
-        /// <summary>
-        /// Gets the row index 
-        /// </summary>
-        public int Row { get; private set; }
 
-        /// <summary>
-        /// Gets the column index 
-        /// </summary>
-        public int Column { get; private set; }
-       
-        private bool alive;
+        protected internal int value;
 
         /// <summary>
         /// Value for cell is alive or dead.
         /// </summary>
         public bool IsAlive
         {
-            get => alive; set => alive = value;
+            get => value == 1; set => this.value = value ? 1 : 0;
         }
     }
 }
